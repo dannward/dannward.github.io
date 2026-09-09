@@ -1,0 +1,30 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tesla Fleet API — auth callback</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 4rem auto; padding: 0 1rem; }
+  code { background: #f0f0f0; padding: .1em .3em; border-radius: 3px; word-break: break-all; }
+  #code { display:block; font-size: 1.1rem; padding: 1rem; background:#f0f0f0; border-radius:6px; margin:1rem 0; }
+  button { font: inherit; padding: .5em 1em; }
+</style>
+<h1>Tesla Fleet API callback</h1>
+<p id="status">Waiting for an authorization redirect…</p>
+<div id="out" hidden>
+  <p>Authorization code:</p>
+  <code id="code"></code>
+  <button onclick="navigator.clipboard.writeText(document.getElementById('code').textContent)">Copy code</button>
+  <p style="margin-top:1rem">Full redirect URL (paste this if the setup tool asks for it):</p>
+  <code id="fullurl"></code>
+</div>
+<script>
+  const p = new URLSearchParams(location.search);
+  const code = p.get('code');
+  if (code) {
+    document.getElementById('status').textContent = 'Got it. Copy the code below back into the setup tool.';
+    document.getElementById('code').textContent = code;
+    document.getElementById('fullurl').textContent = location.href;
+    document.getElementById('out').hidden = false;
+  } else if (p.get('error')) {
+    document.getElementById('status').textContent = 'Tesla returned an error: ' + p.get('error') + ' — ' + (p.get('error_description')||'');
+  }
+</script>
